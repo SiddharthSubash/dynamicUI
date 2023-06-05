@@ -98,8 +98,8 @@ public static void submit(Stage stage, Employee obj, GridPane gridPane) {
 
 
                 if (validate_util.validateDataValueType(val, cls) == false) {
-                      lbl.setStyle("-fx-text-fill: red");
-                  }
+                    lbl.setStyle("-fx-text-fill: red");
+                }
                 TextField txt = UIUtil.createTextField(val);
                 UnaryOperator<TextFormatter.Change> numberValidationFormatter = change -> {
                     if(!change.getText().matches("[a-zA-Z$&+,:;=\\\\?@#|/'\\[\\]\\{\\}_+<>.^*()%!-]")){
