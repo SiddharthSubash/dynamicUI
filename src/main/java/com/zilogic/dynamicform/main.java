@@ -40,8 +40,8 @@ public class main extends Application{
 
             e.setId(78);
             e.setAge(5);
-            e.setName("Orochimaru");
-            e.setDob(cal);
+            //e.setName("Orochimaru");
+            //e.setDob(cal);
             
             GridPane gridPane = UIUtil.createGridPane();
             gridPane.setHgap(10);

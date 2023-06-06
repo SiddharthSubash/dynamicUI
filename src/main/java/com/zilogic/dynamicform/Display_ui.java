@@ -28,11 +28,35 @@ public class Display_ui {
     public static Validate_util validate_util= new Validate_util();
     public static Validate_ui_functions validate_ui_functions = new Validate_ui_functions();
 
-    public static void close_ui(Stage stage) {
+    public static void closeWindow(Stage stage) {
         statusLabel.setText("");
         stage.close();
     }
+    public static int getNumberOfFields(Object obj) {
+        Class cls = obj.getClass();
+        Field[] fields = cls.getDeclaredFields();
 
+        return fields.length;
+    }
+    
+    public static Stage initializeStage() {
+        final Stage stage = UIUtil.createStage();
+        stage.initOwner(mainStage);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setOnCloseRequest( ev -> {
+            statusLabel.setText("");
+            closeWindow(stage);
+        });
+        return stage;
+    }
+
+    public static GridPane initializeGridPane() {
+        GridPane gridPane = UIUtil.createGridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(10, 10, 10, 10));
+        return gridPane;
+    }
     public static void display_ui(Employee emp) {
         try {
             final Stage stage = UIUtil.createStage();
@@ -51,7 +75,7 @@ public class Display_ui {
             
             Button closeButton = new Button("Close");
             closeButton.setOnAction(ev -> {
-                close_ui(stage);
+                closeWindow(stage);
             });
 
             int row = 0;
