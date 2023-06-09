@@ -11,19 +11,11 @@ import java.lang.reflect.Field;
  *
  * @author user
  */
-public class Validate_util {
+public class FormUtil {
 
     public static Boolean check_calendar_exist(Field f) {
         try {
             return f.getType().getSimpleName().equalsIgnoreCase("GregorianCalendar");
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    
-    public static Boolean validateDataValueType(Object val, Class<?> cls) {
-        try {
-            return (cls.getTypeName()).equals(val.getClass().getTypeName());
         } catch (Exception e) {
             return false;
         }

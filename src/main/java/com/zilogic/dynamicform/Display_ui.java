@@ -10,12 +10,15 @@ import static com.zilogic.dynamicform.main.statusLabel;
 import java.lang.reflect.Field;
 import java.util.GregorianCalendar;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -25,112 +28,119 @@ import javafx.stage.Stage;
  */
 public class Display_ui {
 
-    public static Validate_util validate_util= new Validate_util();
-    public static Validate_ui_functions validate_ui_functions = new Validate_ui_functions();
+    public static FormUtil formUtil = new FormUtil();
+    public static UiFunctions validate_ui_functions = new UiFunctions();
+    public static UIUtil uiUtil = new UIUtil();
 
-    public static void closeWindow(Stage stage) {
-        statusLabel.setText("");
-        stage.close();
-    }
-    public static int getNumberOfFields(Object obj) {
-        Class cls = obj.getClass();
-        Field[] fields = cls.getDeclaredFields();
 
-        return fields.length;
-    }
-    
-    public static Stage initializeStage() {
-        final Stage stage = UIUtil.createStage();
+    public static Stage initializeStage(String titleText) {
+        final Stage stage = uiUtil.createStage();
+        stage.setTitle(titleText);
         stage.initOwner(mainStage);
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setOnCloseRequest( ev -> {
             statusLabel.setText("");
-            closeWindow(stage);
+            uiUtil.closeWindow(stage);
         });
+
         return stage;
     }
 
     public static GridPane initializeGridPane() {
-        GridPane gridPane = UIUtil.createGridPane();
+        GridPane gridPane = uiUtil.createGridPane();
         gridPane.setHgap(10);
         gridPane.setVgap(10);
         gridPane.setPadding(new Insets(10, 10, 10, 10));
+
         return gridPane;
     }
-    public static void display_ui(Employee emp) {
-        try {
-            final Stage stage = UIUtil.createStage();
-            stage.initOwner(mainStage);
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setOnCloseRequest(ev -> {
-                statusLabel.setText("");
-                stage.close();
-            });
-            Class obj = emp.getClass();
-            GridPane gridPane = UIUtil.createGridPane();
-            gridPane.setHgap(10);
-            gridPane.setVgap(10);
-            gridPane.setPadding(new Insets(10, 10, 10, 10));
-            Field[] fields = obj.getDeclaredFields();
-            
-            Button closeButton = new Button("Close");
-            closeButton.setOnAction(ev -> {
-                closeWindow(stage);
-            });
 
+    public static void performOperation(Object obj, GridPane gridPane) {
+        try {
             int row = 0;
             int column = 0;
 
+            Class cls = obj.getClass();
+            Field[] fields = cls.getDeclaredFields();
             String data_name;
-            Class<?> cls;
+            String object_type;
+            TextField txt;
+            Label lbl;
 
             for (Field f: fields) {
 
-                JsonSerializable.JsonElement javaAnnotation = validate_util.checkAnnotationExist(f);
+                JsonSerializable.JsonElement javaAnnotation = formUtil.checkAnnotationExist(f);
                 if (javaAnnotation != null) {
 
                     data_name = javaAnnotation.name();
-                    cls = javaAnnotation.type();
+                    object_type = javaAnnotation.type().getTypeName();
                 } else {
                     data_name = f.getName();
-                    cls = f.getType();
+                    object_type = f.getType().getTypeName();
                 }
-                Label lbl = UIUtil.createLabel(data_name);
+                lbl = uiUtil.createLabel(data_name);
                 Object val;
 
-                if (validate_util.validate_data_values(f, emp) == false) {
+                if (formUtil.validate_data_values(f, obj) == false) {
                     lbl.setStyle("-fx-text-fill: red");
                     val = "";
                 } else {
-                    val = f.get(emp);
+                    val = f.get(obj);
                 }
 
-                if (validate_util.validateDataValueType(val, cls) == false) {
-                    lbl.setStyle("-fx-text-fill: red");
-                }
-                TextField txt = UIUtil.createTextField(val);
-                gridPane = UIUtil.addToGridPane(gridPane, lbl, column, row);
+                txt = uiUtil.createTextField(val);
+                uiUtil.addToGridPane(gridPane, lbl, column, row);
 
-                if (validate_util.check_calendar_exist(f) == true) {
+                if (formUtil.check_calendar_exist(f) == true) {
                     DatePicker datePicker = new DatePicker();
                     datePicker.setDisable(true);
-                    GregorianCalendar cal = (GregorianCalendar)f.get(emp);
+                    GregorianCalendar cal = (GregorianCalendar)f.get(obj);
                     if (validate_ui_functions.populate_calendar_values(cal, datePicker) != true) {
 
                         lbl.setStyle("-fx-text-fill: red");
                     }
-                    gridPane = UIUtil.addToGridPane(gridPane, datePicker, column + 1, row);
+                    gridPane = uiUtil.addToGridPane(gridPane, datePicker, column + 1, row);
 
                 } else {
                     txt.setDisable(true);
-                    gridPane = UIUtil.addToGridPane(gridPane, txt, column + 1, row);
+                    gridPane = uiUtil.addToGridPane(gridPane, txt, column + 1, row);
                 }
                 row = row + 1;
             }
-            gridPane = UIUtil.addToGridPane(gridPane, closeButton, 1, row);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 
-            Scene scene = UIUtil.createScene(gridPane, 450, 200);
-            UIUtil.addSceneToStage(stage, scene);
+    public static void display_ui(Object obj) {
+        try {
+            String stageTitleText = "Display Form";
+            Stage stage = initializeStage(stageTitleText);
+            GridPane gridPane = initializeGridPane();
+            VBox vboxMainLayout = uiUtil.createVbox();
+
+            HBox hboxFields = uiUtil.createHbox();
+            hboxFields.setPadding(new Insets(15, 12, 15, 12));
+            hboxFields.setSpacing(10);
+            hboxFields.getChildren().add(gridPane);
+
+            HBox hboxButtons = uiUtil.createHbox();
+            hboxButtons.setPadding(new Insets(15, 12, 15, 12));
+            hboxButtons.setSpacing(10);
+            hboxButtons.setAlignment(Pos.CENTER);
+
+            Button closeButton = new Button("Close");
+            closeButton.setOnAction(ev -> {
+                statusLabel.setText("");
+                uiUtil.closeWindow(stage);
+            });
+
+            performOperation(obj, gridPane);
+            hboxButtons.getChildren().addAll(closeButton);
+            vboxMainLayout.getChildren().addAll(hboxFields, hboxButtons);
+
+            Scene scene = uiUtil.createScene(vboxMainLayout, 385, 250);
+            uiUtil.addSceneToStage(stage, scene);
             stage.show();
 
         } catch (Exception e) {

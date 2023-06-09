@@ -60,8 +60,7 @@ public class Employee implements java.io.Serializable {
     }
 
     public void setDob(GregorianCalendar dob) {
-        System.out.println("dddd" + dob.get(Calendar.YEAR) + dob.get(Calendar.MONTH) + dob.get(Calendar.DATE));
-        
+       
         this.dob = dob;
     }
 

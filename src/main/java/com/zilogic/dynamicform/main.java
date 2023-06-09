@@ -6,9 +6,7 @@
 package com.zilogic.dynamicform;
 
 import javafx.application.Application; 
-
 import java.util.GregorianCalendar;
-
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -22,7 +20,7 @@ import javafx.stage.Stage;
  */
 
 public class main extends Application{
-    
+
     public static Button newBtn = new Button();
     public static Button updateBtn = new Button();
     public static Button displayBtn = new Button();
@@ -33,6 +31,8 @@ public class main extends Application{
     public void start(Stage stage) {
         try {
             mainStage = stage;
+            String stageTitleText = "Form";
+            mainStage.setTitle(stageTitleText);
 
             Employee e = new Employee();
 
@@ -71,7 +71,7 @@ public class main extends Application{
             UIUtil.addToGridPane(gridPane, displayBtn, 2, 0);
             UIUtil.addToGridPane(gridPane, statusLabel, 1, 4);
 
-            Scene scene = UIUtil.createScene(gridPane, 400, 200);
+            Scene scene = UIUtil.createScene(gridPane, 375, 200);
             stage = UIUtil.addSceneToStage(stage, scene);
             stage.show();
 
@@ -79,7 +79,7 @@ public class main extends Application{
             System.out.println(e);
         }
     }
-    
+
     public static Object passObject(Object obj1) {
         Object obj = obj1;
         return obj;

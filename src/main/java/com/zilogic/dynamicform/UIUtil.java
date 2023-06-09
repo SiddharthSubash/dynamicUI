@@ -7,13 +7,13 @@ package com.zilogic.dynamicform;
 
 import javafx.scene.Node;
 import javafx.scene.Scene;
-
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 
 /**
  *
@@ -63,5 +63,20 @@ public class UIUtil {
     public static void display_stage(Stage stage) {
         stage.show();
     }
+    
+    public static HBox createHbox() {
+        HBox hbox = new HBox();
 
+        return hbox;
+    }
+    
+    public static VBox createVbox() {
+        VBox vbox = new VBox();
+
+        return vbox;
+    }
+    
+    public static void closeWindow(Stage stage) {
+        stage.close();
+    }
 }
