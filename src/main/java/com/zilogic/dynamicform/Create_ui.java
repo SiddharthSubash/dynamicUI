@@ -5,8 +5,8 @@
  */
 package com.zilogic.dynamicform;
 
-import static com.zilogic.dynamicform.main.mainStage;
-import static com.zilogic.dynamicform.main.statusLabel;
+import static com.zilogic.dynamicform.Main.mainStage;
+import static com.zilogic.dynamicform.Main.statusLabel;
 import java.lang.reflect.Field;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

@@ -19,7 +19,7 @@ import javafx.stage.Stage;
  * @author user
  */
 
-public class main extends Application{
+public class Main extends Application {
 
     public static Button newBtn = new Button();
     public static Button updateBtn = new Button();
@@ -47,8 +47,7 @@ public class main extends Application{
             gridPane.setHgap(10);
             gridPane.setVgap(10);
             gridPane.setPadding(new Insets(10, 10, 10, 10));
-            
-            
+
             newBtn.setText("Create Fields");
             newBtn.setId("Create Button");
             
@@ -87,8 +86,9 @@ public class main extends Application{
 
     public static void main(String[] args) {
         try {
+
             launch(args); 
-            //App.main(args);
+            //App.Main(args);
         }
         catch (Exception e) {
             System.out.println(e);

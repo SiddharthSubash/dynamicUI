@@ -27,7 +27,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.4</version>
                 <configuration>
-                    <mainClass>com.zilogic.dynamicform.main</mainClass>
+                    <mainClass>com.zilogic.dynamicform.Main</mainClass>
                 </configuration>
                 <executions>
                     <execution>
@@ -83,7 +83,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.zilogic.dynamicform.main</mainClass>
+                            <mainClass>com.zilogic.dynamicform.Main</mainClass>
                         </manifest>
                     </archive>  
             
@@ -102,7 +102,7 @@
                     <archive>
                         <index>true</index>
                         <manifest>
-                            <mainClass>com.zilogic.dynamicform.main</mainClass>
+                            <mainClass>com.zilogic.dynamicform.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

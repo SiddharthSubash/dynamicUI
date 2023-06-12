@@ -5,11 +5,7 @@
  */
 package com.zilogic.dynamicform;
 
-
-
-import java.util.Calendar;
 import java.util.GregorianCalendar;
-
 
 /**
  *
@@ -68,11 +64,35 @@ public class Employee implements java.io.Serializable {
         this.id = id;
     }
 
-//    public static void main(String[] args) {
-//        //Application.launch(javafx.application.Application.class);
-//        //GregorianCalendar cal =  new GregorianCalendar(1996, 10, 23);
-//        //Employee e = new Employee("Orochimaru", 15, cal, 1);
-//        
-//      //Application.launch(JavaFxApplication.class);
+//    public static void main(String[] args) throws CloneNotSupportedException {
+//        Employee e = new Employee();
+//        e.setId(100);
+//        e.setAge(5);
+//        e.setName("Orochimaru");
+//        GregorianCalendar cal =  new GregorianCalendar(1996, 10, 23);
+//        e.setDob(cal);
+//        System.out.println("asfasfasasfa");
+//        //App.Main(args);
+//        try {
+//            Object obj = e;
+//
+//            System.out.println("objeeeeeectttt" + e);
+//            Object[] ob = new Object[1];
+//            ob[0] = obj;
+//            System.out.println("objeeeeeect" + ob[0]);
+//            //Object[] ag = ob;
+//            //ag[0] = e;
+//            //String[] str = ob(new String[ob.length()]);
+//            System.out.println("ggggggggg");
+//            App.launch(Main.class);
+//            //App.launch(Main.class);
+//            //Application.launch(javafx.application.Application.class);
+//            //GregorianCalendar cal =  new GregorianCalendar(1996, 10, 23);
+//            //Employee e = new Employee("Orochimaru", 15, cal, 1);
+//
+//          //Application.launch(JavaFxApplication.class);
+//      } catch (Exception event) {
+//            System.out.println("e" + event);
+//        }
 //    }
 }
