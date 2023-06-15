@@ -15,6 +15,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -30,18 +31,18 @@ public class UiFunctions {
             int date = gc.get(GregorianCalendar.DATE);
 
             datePicker.setValue(LocalDate.of(year, month, date));
-
+            System.out.println("ewgqew" + datePicker);
             return true;
         } catch (Exception e) {
             return false;
         }
     }
     
-    public static void submitForm(Stage stage, Object obj, GridPane gridPane, Label lbl, String statusText) {
+    public static void submitForm(AnchorPane anchorPane, Object obj, GridPane gridPane, Label lbl, String statusText) {
         if (UiFunctions.validate_ui(gridPane, obj) == true) {
             lbl.setText(statusText);
             lbl.setStyle("-fx-text-fill: green");
-            stage.close();
+            anchorPane.getChildren().clear();
         }
     }
 
@@ -177,5 +178,14 @@ public class UiFunctions {
         } catch (Exception e) {
             return null;
         }
-    }   
+    }
+    
+    public static void clearDataValue(TextField txtField) {
+        txtField.setText("");
+    }
+    
+    public static void clearDatePickerValue(DatePicker datePicker) {
+        //datePicker.getEditor().clear();
+        datePicker.setValue(null);
+    }
 }

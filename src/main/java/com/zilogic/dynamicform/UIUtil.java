@@ -7,6 +7,7 @@ package com.zilogic.dynamicform;
 
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -26,6 +27,10 @@ public class UIUtil {
         return label;
     }
     
+    public static Button createButton(String text) {
+        Button button = new Button(text);
+        return button;
+    }
     public static TextField createTextField(Object text) {
         try {
         TextField txtField = new TextField(text.toString());

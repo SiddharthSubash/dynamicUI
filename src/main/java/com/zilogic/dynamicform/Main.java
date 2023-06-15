@@ -5,13 +5,19 @@
  */
 package com.zilogic.dynamicform;
 
+import java.awt.event.WindowListener;
 import javafx.application.Application; 
 import java.util.GregorianCalendar;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -26,13 +32,27 @@ public class Main extends Application {
     public static Button displayBtn = new Button();
     public static Label statusLabel = new Label();
     public static Stage mainStage;
+    public static UIUtil uiUtil = new UIUtil();
+    public AnchorPane createAnchorPane;
+    public AnchorPane updateAnchorPane;
+    public AnchorPane displayAnchorPane;
 
     @Override
     public void start(Stage stage) {
         try {
             mainStage = stage;
+//            mainStage.setMinWidth(Double.MIN_VALUE);
+//            mainStage.setHeight(Double.MIN_VALUE);
+//            mainStage.setMaxHeight(Double.MAX_VALUE);
+//            mainStage.setMaxWidth(Double.MAX_VALUE);
+            mainStage.sizeToScene();
             String stageTitleText = "Form";
             mainStage.setTitle(stageTitleText);
+            VBox mainVbox = uiUtil.createVbox();
+            mainVbox.setMaxHeight(Double.MAX_VALUE);
+
+            mainVbox.setPadding(new Insets(15, 12, 15, 12));
+            mainVbox.setSpacing(10);
 
             Employee e = new Employee();
 
@@ -42,36 +62,78 @@ public class Main extends Application {
             e.setAge(5);
             //e.setName("Orochimaru");
             //e.setDob(cal);
-            
-            GridPane gridPane = UIUtil.createGridPane();
+
+            GridPane gridPane = uiUtil.createGridPane();
             gridPane.setHgap(10);
             gridPane.setVgap(10);
-            gridPane.setPadding(new Insets(10, 10, 10, 10));
-
+            //gridPane.setPadding(new Insets(10, 10, 10, 10));
+            gridPane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            gridPane.setMinSize(Double.MIN_VALUE, Double.MIN_VALUE);
             newBtn.setText("Create Fields");
             newBtn.setId("Create Button");
-            
+
             newBtn.setOnAction(event -> {
-                Create_ui.create_ui(e);
+                statusLabel.setText("");
+                createAnchorPane = Create_ui.create_ui(e);
+                //createAnchorPane.setPadding(new Insets(50, 50, 50, 50));
+                gridPane.getChildren().remove(updateAnchorPane);
+                gridPane.getChildren().remove(displayAnchorPane);
+                gridPane.add(createAnchorPane, 1, 0, 1, 6);
             });
 
             updateBtn.setText("Update Fields");
             updateBtn.setOnAction(event -> {
-                Update_ui.update_ui(e);
+
+                statusLabel.setText("");
+                updateAnchorPane = Update_ui.update_ui(e);
+                gridPane.getChildren().remove(createAnchorPane);
+                gridPane.getChildren().remove(displayAnchorPane);
+                gridPane.add(updateAnchorPane, 1, 0, 1, 6);
+                
             });
 
             displayBtn.setText("Display Fields");
             displayBtn.setOnAction(event -> {
-                Display_ui.display_ui(e);
+
+                statusLabel.setText("");
+                displayAnchorPane = Display_ui.display_ui(e);
+                gridPane.getChildren().remove(createAnchorPane);
+                gridPane.getChildren().remove(updateAnchorPane);
+                gridPane.add(displayAnchorPane, 1, 0, 1, 6);
             });
+//            newBtn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+//            newBtn.setMinSize(Double.MIN_VALUE, Double.MIN_VALUE);
+//            updateBtn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+//            updateBtn.setMinSize(Double.MIN_VALUE, Double.MIN_VALUE);
+//            displayBtn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+//            displayBtn.setMinSize(Double.MIN_VALUE, Double.MIN_VALUE);
+//            mainVbox.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+//            mainVbox.setMinSize(Double.MIN_VALUE, Double.MIN_VALUE);
+            uiUtil.addToGridPane(gridPane, newBtn, 0, 0);
+            uiUtil.addToGridPane(gridPane, updateBtn, 0, 1);
+            uiUtil.addToGridPane(gridPane, displayBtn, 0, 2);
+            uiUtil.addToGridPane(gridPane, statusLabel, 0, 3);
 
-            UIUtil.addToGridPane(gridPane, newBtn, 0, 0);
-            UIUtil.addToGridPane(gridPane, updateBtn, 1, 0);
-            UIUtil.addToGridPane(gridPane, displayBtn, 2, 0);
-            UIUtil.addToGridPane(gridPane, statusLabel, 1, 4);
+            mainVbox.getChildren().addAll(gridPane);
+            
+            Scene scene = uiUtil.createScene(mainVbox, 520, 300);
+//            scene.widthProperty().addListener(new ChangeListener<Number>() {
+//            public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+//                System.out.println("Width: " + newSceneWidth);
+//                //Double val = newSceneWidth.doubleValue();
+//                System.out.println("dddd" + newSceneWidth.doubleValue());
+//                mainStage.setWidth(newSceneWidth.doubleValue());
+//                }
+//            });
+//            scene.heightProperty().addListener(new ChangeListener<Number>() {
+//                @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
+//                    System.out.println("Height: " + newSceneHeight);
+//                    System.out.println("dddd" + newSceneHeight.doubleValue());
+//                    mainStage.setHeight(newSceneHeight.doubleValue());
+//                }
+//            });
 
-            Scene scene = UIUtil.createScene(gridPane, 375, 200);
-            stage = UIUtil.addSceneToStage(stage, scene);
+            stage = uiUtil.addSceneToStage(stage, scene);
             stage.show();
 
         } catch (Exception e) {
