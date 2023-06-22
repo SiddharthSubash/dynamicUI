@@ -21,8 +21,10 @@ public class Employee implements java.io.Serializable {
     int age;
     @JsonSerializable.JsonElement(name = "DOB", type = GregorianCalendar.class)
     GregorianCalendar dob;
-    @JsonSerializable.JsonElement(name = "EMP ID", type = Float.class)
-    float id;
+    @JsonSerializable.JsonElement(name = "EMP ID", type = Integer.class)
+    int id;
+    @JsonSerializable.JsonElement(name = "Salary", type = Double.class)
+    double salary;
 //
 //    public Employee(String name, int age, GregorianCalendar dob, int id) {
 //        this.name = name;
@@ -30,6 +32,12 @@ public class Employee implements java.io.Serializable {
 //        this.dob = dob;
 //        this.id = id;
 //    }
+
+
+
+    public Double getSalary() {
+        return salary;
+    }
 
     public String getName() {
         return name;
@@ -43,7 +51,7 @@ public class Employee implements java.io.Serializable {
         return dob;
     }
 
-    public float getId() {
+    public int getId() {
         return id;
     }
 
@@ -62,6 +70,9 @@ public class Employee implements java.io.Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+    public void setSalary(Double salary) {
+        this.salary = salary;
     }
 
 //    public static void main(String[] args) throws CloneNotSupportedException {

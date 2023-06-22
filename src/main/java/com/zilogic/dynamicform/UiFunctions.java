@@ -41,7 +41,8 @@ public class UiFunctions {
     }
 
     public static void submitForm(AnchorPane anchorPane, Object obj, GridPane gridPane, Label lbl, String statusText) {
-        if (UiFunctions.validate_ui(gridPane, obj) == true) {
+        Boolean validateFlag = UiFunctions.validate_ui(gridPane, obj);
+        if (validateFlag == true) {
             lbl.setText(statusText);
             lbl.setStyle("-fx-text-fill: green");
             anchorPane.getChildren().clear();
@@ -50,11 +51,17 @@ public class UiFunctions {
 
     public static int checkFieldDataType(String FieldMember) {
         if (FieldMember.equalsIgnoreCase("Int")) {
+            System.out.println("iii" + FieldMember);
             return 1;
         } else if (FieldMember.equalsIgnoreCase("String")) {
+            System.out.println("sssss" + FieldMember);
             return 2;
         } else if (FieldMember.equalsIgnoreCase("Float")) {
+            System.out.println("ffff" + FieldMember);
             return 3;
+        }  else if (FieldMember.equalsIgnoreCase("Double")) {
+            System.out.println("ddddd" + FieldMember);
+            return 4;
         }
         return 0;
     }
@@ -92,7 +99,6 @@ public class UiFunctions {
             Pattern pattern = Pattern.compile(regex);
 
             //System.out.println(patternMatchFound + change.getControlNewText() + "chahe" + change.getControlText() + "asfsa" + txtField.getText() + "ttt" + change.getText());
-
             if (pattern.matcher(change.getControlNewText()).matches()) {
 
                 if (patternMatchFound) {
@@ -101,7 +107,6 @@ public class UiFunctions {
                     patternMatchFound = true;
                 }
                 return change;
-
             }
             // For allowing backspace
             else if(!change.getText().matches("[0-9 a-zA-Z$&+,:;=\\\\?@#|/'\\[\\]<>^*()%!-]") && patternMatchFound == true) {
@@ -124,6 +129,18 @@ public class UiFunctions {
                         }
                     } else if (change.getControlNewText().charAt(0) == '.') {
                         return null;
+                    } else {
+
+                        int index = -1;
+                        int count = 0;
+                        while ((index = change.getControlNewText().indexOf(".", index + 1)) != -1) {
+                            count = count + 1;
+                        }
+                        if (count > 1) {
+                            return null;
+                        } else {
+                            return change;
+                        }
                     }
                 }
                 return change;
@@ -138,6 +155,72 @@ public class UiFunctions {
 
         return txtField;
     }
+    
+    public static TextField doubleValidate(TextField txtField, Label lbl) {
+        UnaryOperator<TextFormatter.Change> doubleValidationFormatter = change -> {
+
+            String regex = "^\\d+\\.\\d\\d\\d\\d$";
+            Pattern pattern = Pattern.compile(regex);
+
+            if (pattern.matcher(change.getControlNewText()).matches()) {
+
+                if (patternMatchFound) {
+                    patternMatchFound = false;
+                } else {
+                    patternMatchFound = true;
+                }
+                return change;
+            }
+            // For allowing backspace
+            else if(!change.getText().matches("[0-9 a-zA-Z$&+,.:;=\\\\?@#|/'\\[\\]<>^*()%!-]") && patternMatchFound == true) {
+                patternMatchFound = false;
+                return change;
+            }
+
+            // For entering characters only if pattern not found and prevents multiple decimal point
+            else if(!change.getText().matches("[a-z A-Z$&+,:;=\\\\?@#|/'\\[\\]<>^*()%!-]")) {
+                if (patternMatchFound == true) {
+                    return null;
+                }
+                else if (change.isContentChange() == true) {
+                    if (lbl.getStyle().equalsIgnoreCase("-fx-text-fill: red")) {
+                        lbl.setStyle("-fx-text-fill: green");
+                    } else if (change.getControlNewText().length() == 0) {
+                        if (lbl.getStyle().length() != 0) {
+                            lbl.setStyle("-fx-text-fill: red");
+                            txtField.setPromptText("Enter " + lbl.getText());
+                            txtField.getParent().requestFocus();
+                        }
+                    } else if (change.getControlNewText().charAt(0) == '.') {
+
+                        return null;
+                    } else {
+
+                        int index = -1;
+                        int count = 0;
+                        while ((index = change.getControlNewText().indexOf(".", index + 1)) != -1) {
+                            count = count + 1;
+                        }
+                        if (count > 1) {
+                            return null;
+                        } else {
+                            return change;
+                        }
+                    }
+                }
+                return change;
+            } 
+            else {
+                return null;
+            }
+        };
+        
+        TextFormatter<Integer> formatter = new TextFormatter<>(doubleValidationFormatter);
+        txtField.setTextFormatter(formatter);
+
+        return txtField;
+    }
+    
 
     public static TextField stringValidate(TextField txtField, Label lbl) {
         UnaryOperator<TextFormatter.Change> StringValidationFormatter = change -> {
@@ -204,8 +287,8 @@ public class UiFunctions {
                             txtObj.setText(txt.getText());
 
                             if (fields[i].getType().getSimpleName().equalsIgnoreCase("String")) {
-
                                 if (validateFlag == true) {
+                                    
                                     fields[i].set(emp, txt.getText());
                                 }
                                 i = i + 1;
@@ -214,6 +297,26 @@ public class UiFunctions {
                                 if (validateFlag == true) {
                                     fields[i].setInt(emp, val);
                                 }
+                                i = i + 1;
+                            } else if (fields[i].getType().getSimpleName().equalsIgnoreCase("float")) {
+                                float val = Float.parseFloat(txt.getText());
+                                String valConversion = Float.toString(val);
+
+                                fields[i].setFloat(emp, val);
+                                txt.setText(valConversion);
+                                txt.getParent().requestFocus();
+
+                                i = i + 1;
+                            }  else if (fields[i].getType().getSimpleName().equalsIgnoreCase("Double")) {
+                                double doubleVal = Double.parseDouble(txt.getText());
+                                
+                                String doubleValConversion = Double.toString(doubleVal);
+
+                                fields[i].setDouble(emp, doubleVal);
+
+                                txt.setText(doubleValConversion);
+                                //txt.getParent().requestFocus();
+
                                 i = i + 1;
                             }
 

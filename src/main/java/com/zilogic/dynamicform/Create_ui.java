@@ -38,7 +38,6 @@ public class Create_ui {
         gridPane.setPadding(new Insets(0, 10, 10, 10));
         return gridPane;
     }
-    
 
     public static void performOperation(Object obj, GridPane gridPane) {
         Class cls = obj.getClass();
@@ -70,13 +69,16 @@ public class Create_ui {
             Button clearBtn = uiUtil.createButton("Clear");
 
             inputValue = f.getType().getSimpleName();
-            if (uiFunctions.checkFieldDataType(inputValue) == 1) {
+            int checkType = uiFunctions.checkFieldDataType(inputValue);
+            if (checkType == 1) {
                 uiFunctions.numberValidate(txt, lbl);
-            } else if (uiFunctions.checkFieldDataType(inputValue) == 2) {
+            } else if (checkType == 2) {
                 uiFunctions.stringValidate(txt, lbl);
-            } else if (uiFunctions.checkFieldDataType(inputValue) == 3) {
+            } else if (checkType == 3) {
                 uiFunctions.floatValidate(txt, lbl);
-            } 
+            } else if (checkType == 4) {
+                uiFunctions.doubleValidate(txt, lbl);
+            }
 
             uiUtil.addToGridPane(gridPane, lbl, column, row);
             if (formUtil.check_calendar_exist(f) == true) {

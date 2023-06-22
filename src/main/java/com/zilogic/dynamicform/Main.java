@@ -58,8 +58,9 @@ public class Main extends Application {
 
             GregorianCalendar cal =  new GregorianCalendar(1996, 10, 23);
 
-            e.setId(78);
-            e.setAge(5);
+            //e.setId(78);
+            //e.setAge(5);
+            //e.setSalary(235.23523);
             //e.setName("Orochimaru");
             //e.setDob(cal);
 

@@ -49,6 +49,7 @@ public class Update_ui {
 
             String data_name;
             Object val;
+            String inputValue = "";
 
             for (Field f: fields) {
 
@@ -67,18 +68,22 @@ public class Update_ui {
                     lbl.setStyle("-fx-text-fill: red");
                     val = "";
                 } else {
+                    System.out.println("vvvvvvvvv" + f.get(obj));
                     val = f.get(obj);
                 }
 
                 txt = uiUtil.createTextField(val);
 
-                String inputValue = f.getType().getSimpleName();
-                if (inputValue.equalsIgnoreCase("Int")) {
-
+                inputValue = f.getType().getSimpleName();
+                int checkType = uiFunctions.checkFieldDataType(inputValue);
+                if (checkType == 1) {
                     uiFunctions.numberValidate(txt, lbl);
-                } else if (inputValue.equalsIgnoreCase("String")) {
-
+                } else if (checkType == 2) {
                     uiFunctions.stringValidate(txt, lbl);
+                } else if (checkType == 3) {
+                    uiFunctions.floatValidate(txt, lbl);
+                } else if (checkType == 4) {
+                    uiFunctions.doubleValidate(txt, lbl);
                 }
 
                 uiUtil.addToGridPane(gridPane, lbl, column, row);
