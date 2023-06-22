@@ -76,6 +76,7 @@ public class Main extends Application {
                 statusLabel.setText("");
                 createAnchorPane = Create_ui.create_ui(e);
                 //createAnchorPane.setPadding(new Insets(50, 50, 50, 50));
+
                 gridPane.getChildren().remove(updateAnchorPane);
                 gridPane.getChildren().remove(displayAnchorPane);
                 gridPane.add(createAnchorPane, 1, 0, 1, 6);
@@ -101,14 +102,7 @@ public class Main extends Application {
                 gridPane.getChildren().remove(updateAnchorPane);
                 gridPane.add(displayAnchorPane, 1, 0, 1, 6);
             });
-//            newBtn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-//            newBtn.setMinSize(Double.MIN_VALUE, Double.MIN_VALUE);
-//            updateBtn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-//            updateBtn.setMinSize(Double.MIN_VALUE, Double.MIN_VALUE);
-//            displayBtn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-//            displayBtn.setMinSize(Double.MIN_VALUE, Double.MIN_VALUE);
-//            mainVbox.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-//            mainVbox.setMinSize(Double.MIN_VALUE, Double.MIN_VALUE);
+
             uiUtil.addToGridPane(gridPane, newBtn, 0, 0);
             uiUtil.addToGridPane(gridPane, updateBtn, 0, 1);
             uiUtil.addToGridPane(gridPane, displayBtn, 0, 2);
@@ -117,21 +111,6 @@ public class Main extends Application {
             mainVbox.getChildren().addAll(gridPane);
             
             Scene scene = uiUtil.createScene(mainVbox, 520, 300);
-//            scene.widthProperty().addListener(new ChangeListener<Number>() {
-//            public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-//                System.out.println("Width: " + newSceneWidth);
-//                //Double val = newSceneWidth.doubleValue();
-//                System.out.println("dddd" + newSceneWidth.doubleValue());
-//                mainStage.setWidth(newSceneWidth.doubleValue());
-//                }
-//            });
-//            scene.heightProperty().addListener(new ChangeListener<Number>() {
-//                @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-//                    System.out.println("Height: " + newSceneHeight);
-//                    System.out.println("dddd" + newSceneHeight.doubleValue());
-//                    mainStage.setHeight(newSceneHeight.doubleValue());
-//                }
-//            });
 
             stage = uiUtil.addSceneToStage(stage, scene);
             stage.show();

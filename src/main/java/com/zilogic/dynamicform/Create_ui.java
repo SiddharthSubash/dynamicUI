@@ -70,12 +70,13 @@ public class Create_ui {
             Button clearBtn = uiUtil.createButton("Clear");
 
             inputValue = f.getType().getSimpleName();
-
-            if (inputValue.equalsIgnoreCase("Int")) {
+            if (uiFunctions.checkFieldDataType(inputValue) == 1) {
                 uiFunctions.numberValidate(txt, lbl);
-            } else if (inputValue.equalsIgnoreCase("String")) {
+            } else if (uiFunctions.checkFieldDataType(inputValue) == 2) {
                 uiFunctions.stringValidate(txt, lbl);
-            }
+            } else if (uiFunctions.checkFieldDataType(inputValue) == 3) {
+                uiFunctions.floatValidate(txt, lbl);
+            } 
 
             uiUtil.addToGridPane(gridPane, lbl, column, row);
             if (formUtil.check_calendar_exist(f) == true) {
@@ -87,8 +88,7 @@ public class Create_ui {
                         lbl.setStyle("-fx-text-fill: green");
                     }
                 });
-                System.out.println("hhhhh");
-                clearBtn.setOnAction(event -> uiFunctions.clearDatePickerValue(datePicker));
+                clearBtn.setOnAction(event -> uiFunctions.clearDatePickerValue(lbl, datePicker));
                 //fieldValueHbox.getChildren().addAll(datePicker, clearBtn);
                 uiUtil.addToGridPane(gridPane, datePicker, column + 1, row);
                 uiUtil.addToGridPane(gridPane, clearBtn, column + 2, row);
@@ -96,7 +96,6 @@ public class Create_ui {
             } else {
 
                 //fieldValueHbox.getChildren().addAll(txt, clearBtn);
-
                 clearBtn.setOnAction(event -> uiFunctions.clearDataValue(txt));
                 uiUtil.addToGridPane(gridPane, txt, column + 1, row);
                 uiUtil.addToGridPane(gridPane, clearBtn, column + 2, row);
@@ -131,9 +130,7 @@ public class Create_ui {
             Button cancelButton = new Button("Cancel");
             cancelButton.setOnAction(ev -> {
                 statusLabel.setText("");
-
                 anchorPane.getChildren().clear();
-
             });
 
             performOperation(obj, gridPane);

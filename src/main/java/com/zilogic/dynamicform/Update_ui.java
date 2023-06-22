@@ -8,12 +8,14 @@ package com.zilogic.dynamicform;
 import static com.zilogic.dynamicform.Main.statusLabel;
 import java.lang.reflect.Field;
 import java.util.GregorianCalendar;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -46,11 +48,11 @@ public class Update_ui {
             int column = 0;
 
             String data_name;
-            TextField txt;
             Object val;
 
             for (Field f: fields) {
 
+                final TextField txt;
                 JsonSerializable.JsonElement javaAnnotation = formUtil.checkAnnotationExist(f);
                 if (javaAnnotation != null) {
 
@@ -59,6 +61,7 @@ public class Update_ui {
                     data_name = f.getName();
                 }
                 Label lbl = uiUtil.createLabel(data_name);
+                Button clearBtn = uiUtil.createButton("Clear");
 
                 if (formUtil.validate_data_values(f, obj) == false) {
                     lbl.setStyle("-fx-text-fill: red");
@@ -72,10 +75,10 @@ public class Update_ui {
                 String inputValue = f.getType().getSimpleName();
                 if (inputValue.equalsIgnoreCase("Int")) {
 
-                    txt = uiFunctions.numberValidate(txt, lbl);
+                    uiFunctions.numberValidate(txt, lbl);
                 } else if (inputValue.equalsIgnoreCase("String")) {
 
-                    txt = uiFunctions.stringValidate(txt, lbl);
+                    uiFunctions.stringValidate(txt, lbl);
                 }
 
                 uiUtil.addToGridPane(gridPane, lbl, column, row);
@@ -84,21 +87,35 @@ public class Update_ui {
                     DatePicker datePicker = new DatePicker();
                     datePicker.getEditor().setDisable(true);
                     datePicker.getEditor().setOpacity(1);
-                    datePicker.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
-                        if (lbl.getStyle().equalsIgnoreCase("-fx-text-fill: red")) {
-                            lbl.setStyle("-fx-text-fill: green");
-                        }
-                    });
+                    
                     GregorianCalendar cal = (GregorianCalendar)f.get(obj);
                     if (uiFunctions.populate_calendar_values(cal, datePicker) != true) {
 
                         lbl.setStyle("-fx-text-fill: red");
                     }
-                    uiUtil.addToGridPane(gridPane, datePicker, column + 1, row);
 
+                    clearBtn.setOnAction(event -> uiFunctions.clearDatePickerValue(lbl, datePicker));
+                    
+                    uiUtil.addToGridPane(gridPane, datePicker, column + 1, row);
+                    uiUtil.addToGridPane(gridPane, clearBtn, column + 2, row);
+                    datePicker.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+
+                        if (datePicker.getValue() == null) {
+                            if (lbl.getStyle().equalsIgnoreCase("-fx-text-fill: green")) {
+                                lbl.setStyle("-fx-text-fill: red");
+                            }
+                        } else if (lbl.getStyle().equalsIgnoreCase("-fx-text-fill: red")) {
+                            lbl.setStyle("-fx-text-fill: green");
+                        }
+                    });
                 } else {
+
+                    clearBtn.setOnAction(event -> uiFunctions.clearDataValue(txt));
+                    
                     uiUtil.addToGridPane(gridPane, txt, column + 1, row);
+                    uiUtil.addToGridPane(gridPane, clearBtn, column + 2, row);
                 }
+                
                 row = row + 1;
             }
         } catch (Exception e) {

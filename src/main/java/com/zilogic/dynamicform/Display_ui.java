@@ -114,6 +114,7 @@ public class Display_ui {
             HBox hboxFields = uiUtil.createHbox();
             hboxFields.setPadding(new Insets(0, 12, 15, 12));
             hboxFields.setSpacing(10);
+            hboxFields.setAlignment(Pos.CENTER_RIGHT);
             hboxFields.getChildren().add(gridPane);
 
             HBox hboxButtons = uiUtil.createHbox();
