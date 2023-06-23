@@ -66,16 +66,18 @@ public class Update_ui {
 
                 if (formUtil.validate_data_values(f, obj) == false) {
                     lbl.setStyle("-fx-text-fill: red");
+                    
                     val = "";
                 } else {
-                    System.out.println("vvvvvvvvv" + f.get(obj));
                     val = f.get(obj);
                 }
 
                 txt = uiUtil.createTextField(val);
+                txt.setPromptText("Enter " + lbl.getText());
 
                 inputValue = f.getType().getSimpleName();
                 int checkType = uiFunctions.checkFieldDataType(inputValue);
+
                 if (checkType == 1) {
                     uiFunctions.numberValidate(txt, lbl);
                 } else if (checkType == 2) {
@@ -97,6 +99,8 @@ public class Update_ui {
                     if (uiFunctions.populate_calendar_values(cal, datePicker) != true) {
 
                         lbl.setStyle("-fx-text-fill: red");
+                        datePicker.setPromptText("Enter " + lbl.getText());
+                        //datePicker.getParent().requestFocus();
                     }
 
                     clearBtn.setOnAction(event -> uiFunctions.clearDatePickerValue(lbl, datePicker));
@@ -123,6 +127,7 @@ public class Update_ui {
                 
                 row = row + 1;
             }
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -134,7 +139,6 @@ public class Update_ui {
             GridPane gridPane = initializeGridPane();
             VBox vboxUpdateUiLayout = uiUtil.createVbox();
             AnchorPane anchorPane = new AnchorPane();
-
             HBox hboxFields = uiUtil.createHbox();
             hboxFields.setPadding(new Insets(0, 12, 15, 12));
             hboxFields.setSpacing(10);
@@ -160,6 +164,7 @@ public class Update_ui {
             hboxButtons.getChildren().addAll(cancelButton, updateButton);
             vboxUpdateUiLayout.getChildren().addAll(hboxFields, hboxButtons);
             anchorPane.getChildren().add(vboxUpdateUiLayout);
+            
 
             return anchorPane;
 

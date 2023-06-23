@@ -70,6 +70,7 @@ public class Create_ui {
 
             inputValue = f.getType().getSimpleName();
             int checkType = uiFunctions.checkFieldDataType(inputValue);
+
             if (checkType == 1) {
                 uiFunctions.numberValidate(txt, lbl);
             } else if (checkType == 2) {

@@ -51,16 +51,12 @@ public class UiFunctions {
 
     public static int checkFieldDataType(String FieldMember) {
         if (FieldMember.equalsIgnoreCase("Int")) {
-            System.out.println("iii" + FieldMember);
             return 1;
         } else if (FieldMember.equalsIgnoreCase("String")) {
-            System.out.println("sssss" + FieldMember);
             return 2;
         } else if (FieldMember.equalsIgnoreCase("Float")) {
-            System.out.println("ffff" + FieldMember);
             return 3;
         }  else if (FieldMember.equalsIgnoreCase("Double")) {
-            System.out.println("ddddd" + FieldMember);
             return 4;
         }
         return 0;
@@ -220,7 +216,6 @@ public class UiFunctions {
 
         return txtField;
     }
-    
 
     public static TextField stringValidate(TextField txtField, Label lbl) {
         UnaryOperator<TextFormatter.Change> StringValidationFormatter = change -> {
@@ -270,56 +265,40 @@ public class UiFunctions {
 
                     if (node.getClass().getSimpleName().equalsIgnoreCase("TextField")) {
                         TextField txt = (TextField) node;
-                        if (txt.getText().length() == 0) {
-                            validateFlag = false;
-                            lblNode.setStyle("-fx-text-fill: red");
-                            txt.setPromptText("Enter " + lblNode.getText());
-                            txt.getParent().requestFocus();
-                            i = i + 1;
-                        } else if (txt.getText().isEmpty()) {
-                            validateFlag = false;
-                            lblNode.setStyle("-fx-text-fill: red");
-                            txt.setPromptText("Enter " + lblNode.getText());
-                            txt.getParent().requestFocus();
-                            i = i + 1;
-                        } else {
-                            TextField txtObj = txt;
-                            txtObj.setText(txt.getText());
+                        TextField txtObj = txt;
+                        txtObj.setText(txt.getText());
 
-                            if (fields[i].getType().getSimpleName().equalsIgnoreCase("String")) {
-                                if (validateFlag == true) {
-                                    
-                                    fields[i].set(emp, txt.getText());
-                                }
-                                i = i + 1;
-                            } else if (fields[i].getType().getSimpleName().equalsIgnoreCase("Int")) {
-                                int val = Integer.parseInt(txt.getText());  
-                                if (validateFlag == true) {
-                                    fields[i].setInt(emp, val);
-                                }
-                                i = i + 1;
-                            } else if (fields[i].getType().getSimpleName().equalsIgnoreCase("float")) {
-                                float val = Float.parseFloat(txt.getText());
-                                String valConversion = Float.toString(val);
+                        if (fields[i].getType().getSimpleName().equalsIgnoreCase("String")) {
+                            if (validateFlag == true) {
 
-                                fields[i].setFloat(emp, val);
-                                txt.setText(valConversion);
-                                txt.getParent().requestFocus();
-
-                                i = i + 1;
-                            }  else if (fields[i].getType().getSimpleName().equalsIgnoreCase("Double")) {
-                                double doubleVal = Double.parseDouble(txt.getText());
-                                
-                                String doubleValConversion = Double.toString(doubleVal);
-
-                                fields[i].setDouble(emp, doubleVal);
-
-                                txt.setText(doubleValConversion);
-                                //txt.getParent().requestFocus();
-
-                                i = i + 1;
+                                fields[i].set(emp, txt.getText());
                             }
+                            i = i + 1;
+                        } else if (fields[i].getType().getSimpleName().equalsIgnoreCase("Int")) {
+                            int val = Integer.parseInt(txt.getText());  
+                            if (validateFlag == true) {
+                                fields[i].setInt(emp, val);
+                            }
+                            i = i + 1;
+                        } else if (fields[i].getType().getSimpleName().equalsIgnoreCase("float")) {
+                            float val = Float.parseFloat(txt.getText());
+                            String valConversion = Float.toString(val);
 
+                            fields[i].setFloat(emp, val);
+                            txt.setText(valConversion);
+                            txt.getParent().requestFocus();
+
+                            i = i + 1;
+                        }  else if (fields[i].getType().getSimpleName().equalsIgnoreCase("Double")) {
+                            double doubleVal = Double.parseDouble(txt.getText());
+
+                            String doubleValConversion = Double.toString(doubleVal);
+
+                            fields[i].setDouble(emp, doubleVal);
+
+                            txt.setText(doubleValConversion);
+
+                            i = i + 1;
                         }
                     } else if (node.getClass().getSimpleName().equalsIgnoreCase("DatePicker")) {
 
@@ -328,8 +307,7 @@ public class UiFunctions {
                         if (datePicker.getValue() == null) {
                             validateFlag = false;
                             lblNode.setStyle("-fx-text-fill: red");
-                            datePicker.setPromptText("Enter " + lblNode.getText());
-                            datePicker.getParent().requestFocus();
+
                             i = i + 1;
                         } else {
                             LocalDate lv = datePicker.getValue();
@@ -342,7 +320,6 @@ public class UiFunctions {
                     }
                 }
             }
-        
             return validateFlag;
         } catch (Exception e) {
             return null;

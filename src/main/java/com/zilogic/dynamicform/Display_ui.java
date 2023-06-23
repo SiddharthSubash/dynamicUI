@@ -85,7 +85,7 @@ public class Display_ui {
                     datePicker.setDisable(true);
                     GregorianCalendar cal = (GregorianCalendar)f.get(obj);
                     if (uiFunctions.populate_calendar_values(cal, datePicker) != true) {
-                        
+
                         fieldNameLbl.setStyle("-fx-text-fill: red");
                         dateValueLbl.setText("N/A");
                         dateValueLbl.setStyle("-fx-text-fill: red");

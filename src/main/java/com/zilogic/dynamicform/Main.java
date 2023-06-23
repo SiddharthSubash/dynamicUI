@@ -58,7 +58,7 @@ public class Main extends Application {
 
             GregorianCalendar cal =  new GregorianCalendar(1996, 10, 23);
 
-            //e.setId(78);
+            //=e.setId(78);
             //e.setAge(5);
             //e.setSalary(235.23523);
             //e.setName("Orochimaru");
@@ -74,6 +74,7 @@ public class Main extends Application {
             newBtn.setId("Create Button");
 
             newBtn.setOnAction(event -> {
+                gridPane.getChildren().remove(createAnchorPane);
                 statusLabel.setText("");
                 createAnchorPane = Create_ui.create_ui(e);
                 //createAnchorPane.setPadding(new Insets(50, 50, 50, 50));
@@ -85,7 +86,7 @@ public class Main extends Application {
 
             updateBtn.setText("Update Fields");
             updateBtn.setOnAction(event -> {
-
+                gridPane.getChildren().remove(updateAnchorPane);
                 statusLabel.setText("");
                 updateAnchorPane = Update_ui.update_ui(e);
                 gridPane.getChildren().remove(createAnchorPane);
@@ -96,7 +97,7 @@ public class Main extends Application {
 
             displayBtn.setText("Display Fields");
             displayBtn.setOnAction(event -> {
-
+                gridPane.getChildren().remove(displayAnchorPane);
                 statusLabel.setText("");
                 displayAnchorPane = Display_ui.display_ui(e);
                 gridPane.getChildren().remove(createAnchorPane);
