@@ -19,12 +19,13 @@ public class Employee implements java.io.Serializable {
     String name;
     @JsonSerializable.JsonElement(name = "Age", type = Integer.class)
     int age;
-    @JsonSerializable.JsonElement(name = "DOB", type = GregorianCalendar.class)
+    @JsonSerializable.JsonElement(name = "Dob", type = GregorianCalendar.class)
     GregorianCalendar dob;
     @JsonSerializable.JsonElement(name = "EMP ID", type = Integer.class)
     int id;
     @JsonSerializable.JsonElement(name = "Salary", type = Double.class)
     double salary;
+
 //
 //    public Employee(String name, int age, GregorianCalendar dob, int id) {
 //        this.name = name;
@@ -32,8 +33,6 @@ public class Employee implements java.io.Serializable {
 //        this.dob = dob;
 //        this.id = id;
 //    }
-
-
 
     public Double getSalary() {
         return salary;

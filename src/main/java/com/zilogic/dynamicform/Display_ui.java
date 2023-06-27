@@ -7,14 +7,12 @@ package com.zilogic.dynamicform;
 
 import static com.zilogic.dynamicform.Main.statusLabel;
 import java.lang.reflect.Field;
-import java.time.LocalDate;
 import java.util.GregorianCalendar;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -114,7 +112,6 @@ public class Display_ui {
             HBox hboxFields = uiUtil.createHbox();
             hboxFields.setPadding(new Insets(0, 12, 15, 12));
             hboxFields.setSpacing(10);
-            hboxFields.setAlignment(Pos.CENTER_RIGHT);
             hboxFields.getChildren().add(gridPane);
 
             HBox hboxButtons = uiUtil.createHbox();

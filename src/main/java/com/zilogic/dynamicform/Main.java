@@ -5,12 +5,8 @@
  */
 package com.zilogic.dynamicform;
 
-import java.awt.event.WindowListener;
 import javafx.application.Application; 
 import java.util.GregorianCalendar;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -36,11 +32,14 @@ public class Main extends Application {
     public AnchorPane createAnchorPane;
     public AnchorPane updateAnchorPane;
     public AnchorPane displayAnchorPane;
+    public static UiFunctions uiFunctions = new UiFunctions();
+    public static VBox mainVbox;
 
     @Override
     public void start(Stage stage) {
         try {
             mainStage = stage;
+            
 //            mainStage.setMinWidth(Double.MIN_VALUE);
 //            mainStage.setHeight(Double.MIN_VALUE);
 //            mainStage.setMaxHeight(Double.MAX_VALUE);
@@ -48,7 +47,7 @@ public class Main extends Application {
             mainStage.sizeToScene();
             String stageTitleText = "Form";
             mainStage.setTitle(stageTitleText);
-            VBox mainVbox = uiUtil.createVbox();
+            mainVbox = uiUtil.createVbox();
             mainVbox.setMaxHeight(Double.MAX_VALUE);
 
             mainVbox.setPadding(new Insets(15, 12, 15, 12));
@@ -77,11 +76,13 @@ public class Main extends Application {
                 gridPane.getChildren().remove(createAnchorPane);
                 statusLabel.setText("");
                 createAnchorPane = Create_ui.create_ui(e);
+                //uiFunctions.ChangeBackGroundColor(gridPane);
                 //createAnchorPane.setPadding(new Insets(50, 50, 50, 50));
 
                 gridPane.getChildren().remove(updateAnchorPane);
                 gridPane.getChildren().remove(displayAnchorPane);
                 gridPane.add(createAnchorPane, 1, 0, 1, 6);
+
             });
 
             updateBtn.setText("Update Fields");
