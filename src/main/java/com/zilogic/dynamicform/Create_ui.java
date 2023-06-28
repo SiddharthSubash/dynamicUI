@@ -7,8 +7,11 @@ package com.zilogic.dynamicform;
 
 import static com.zilogic.dynamicform.Main.statusLabel;
 import java.lang.reflect.Field;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -17,7 +20,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
 
 /**
  *
@@ -30,6 +32,11 @@ public class Create_ui {
     public static UiFunctions uiFunctions = new UiFunctions();
     public static UIUtil uiUtil = new UIUtil();
     public static VBox createUiVboxLayout;
+    public static Button createButton = new Button("Create");
+    public static Button cancelButton = new Button("Cancel");
+    public static Button clearAllBtn = new Button("Clear All");
+    public static ObservableList<Node> childrens = FXCollections.observableArrayList();
+    
 
     public static GridPane initializeGridPane() {
         GridPane gridPane = uiUtil.createGridPane();
@@ -47,14 +54,9 @@ public class Create_ui {
         Object val = "";
         String data_name;
         String inputValue = "";
+        
 
         for (Field f: fields) {
-//            HBox fieldValueHbox = uiUtil.createHbox();
-//            fieldValueHbox.setPadding(new Insets(10, 10, 10, 10));
-//            fieldValueHbox.setSpacing(5);
-
-//            fieldValueHbox.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-//            fieldValueHbox.setMinSize(Double.MIN_VALUE, Double.MIN_VALUE);
 
             final TextField txt;
             JsonSerializable.JsonElement javaAnnotation = formUtil.checkAnnotationExist(f);
@@ -63,22 +65,31 @@ public class Create_ui {
             } else {
                 data_name = f.getName();
             }
+            
             Label lbl = uiUtil.createLabel(data_name);
-
+            
             txt = uiUtil.createTextField(val);
+            childrens.add(txt);
             Button clearBtn = uiUtil.createButton("Clear");
 
             inputValue = f.getType().getSimpleName();
             int checkType = uiFunctions.checkFieldDataType(inputValue);
 
-            if (checkType == 1) {
-                uiFunctions.numberValidate(txt, lbl);
-            } else if (checkType == 2) {
-                uiFunctions.stringValidate(txt, lbl);
-            } else if (checkType == 3) {
-                uiFunctions.floatValidate(txt, lbl);
-            } else if (checkType == 4) {
-                uiFunctions.doubleValidate(txt, lbl);
+            switch (checkType) {
+                case 1:
+                    uiFunctions.numberValidate(txt, lbl);
+                    break;
+                case 2:
+                    uiFunctions.stringValidate(txt, lbl);
+                    break;
+                case 3:
+                    uiFunctions.floatValidate(txt, lbl);
+                    break;
+                case 4:
+                    uiFunctions.doubleValidate(txt, lbl);
+                    break;
+                default:
+                    break;
             }
 
             uiUtil.addToGridPane(gridPane, lbl, column, row);
@@ -86,12 +97,17 @@ public class Create_ui {
                 DatePicker datePicker = new DatePicker();
                 datePicker.getEditor().setDisable(true);
                 datePicker.getEditor().setOpacity(1);
+                clearBtn.setOnAction(event -> uiFunctions.clearDatePickerValue(datePicker));
                 datePicker.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+                    System.out.println("lbl" + lbl.getStyle());
                     if (lbl.getStyle().equalsIgnoreCase("-fx-text-fill: red")) {
                         lbl.setStyle("-fx-text-fill: green");
+                    } else if (lbl.getStyle().equalsIgnoreCase("-fx-text-fill: green")) {
+                        lbl.setStyle("-fx-text-fill: red");
                     }
                 });
-                clearBtn.setOnAction(event -> uiFunctions.clearDatePickerValue(lbl, datePicker));
+                childrens.add(datePicker);
+                
                 //fieldValueHbox.getChildren().addAll(datePicker, clearBtn);
                 uiUtil.addToGridPane(gridPane, datePicker, column + 1, row);
                 uiUtil.addToGridPane(gridPane, clearBtn, column + 2, row);
@@ -109,6 +125,7 @@ public class Create_ui {
 
     public static AnchorPane create_ui(Object obj) {
         try {
+
             AnchorPane anchorPane = new AnchorPane();
             GridPane gridPane = initializeGridPane();
 
@@ -125,20 +142,25 @@ public class Create_ui {
             hboxButtons.setSpacing(10);
             hboxButtons.setAlignment(Pos.CENTER);
 
-            Button createButton = new Button("Create");
             createButton.setOnAction(ev -> {
                 uiFunctions.submitForm(anchorPane, obj, gridPane, statusLabel, "Fields Populated");
             });
 
-            Button cancelButton = new Button("Cancel");
             cancelButton.setOnAction(ev -> {
                 statusLabel.setText("");
                 anchorPane.getChildren().clear();
             });
+            
+            clearAllBtn.setOnAction(ev -> {
+                uiFunctions.clearAllFields(childrens);
+
+            });
 
             performOperation(obj, gridPane);
 
-            hboxButtons.getChildren().addAll(cancelButton, createButton);
+
+
+            hboxButtons.getChildren().addAll(cancelButton, createButton, clearAllBtn);
             createUiVboxLayout.getChildren().addAll(hboxFields, hboxButtons);
             anchorPane.getChildren().add(createUiVboxLayout);
 

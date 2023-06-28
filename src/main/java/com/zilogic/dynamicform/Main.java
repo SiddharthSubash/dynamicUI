@@ -5,6 +5,7 @@
  */
 package com.zilogic.dynamicform;
 
+import java.util.ArrayList;
 import javafx.application.Application; 
 import java.util.GregorianCalendar;
 import javafx.geometry.Insets;
@@ -34,6 +35,7 @@ public class Main extends Application {
     public AnchorPane displayAnchorPane;
     public static UiFunctions uiFunctions = new UiFunctions();
     public static VBox mainVbox;
+    
 
     @Override
     public void start(Stage stage) {
@@ -105,6 +107,7 @@ public class Main extends Application {
                 gridPane.getChildren().remove(updateAnchorPane);
                 gridPane.add(displayAnchorPane, 1, 0, 1, 6);
             });
+
 
             uiUtil.addToGridPane(gridPane, newBtn, 0, 0);
             uiUtil.addToGridPane(gridPane, updateBtn, 0, 1);

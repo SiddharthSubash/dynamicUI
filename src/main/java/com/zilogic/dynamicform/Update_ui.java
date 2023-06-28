@@ -8,8 +8,11 @@ package com.zilogic.dynamicform;
 import static com.zilogic.dynamicform.Main.statusLabel;
 import java.lang.reflect.Field;
 import java.util.GregorianCalendar;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -29,6 +32,11 @@ public class Update_ui {
     public static FormUtil formUtil= new FormUtil();
     public static UiFunctions uiFunctions = new UiFunctions();
     public static UIUtil uiUtil = new UIUtil();
+    public static Button updateButton = new Button("Update");
+    public static Button cancelButton = new Button("Cancel");
+    public static Button clearAllBtn = new Button("Clear All");
+    public static VBox UpdateUiVboxLayout;
+    public static ObservableList<Node> childrens = FXCollections.observableArrayList();;
 
     public static GridPane initializeGridPane() {
         GridPane gridPane = uiUtil.createGridPane();
@@ -64,13 +72,13 @@ public class Update_ui {
 
                 if (formUtil.validate_data_values(f, obj) == false) {
                     lbl.setStyle("-fx-text-fill: red");
-                    
                     val = "";
                 } else {
                     val = f.get(obj);
                 }
 
                 txt = uiUtil.createTextField(val);
+                childrens.add(txt);
                 txt.setPromptText("Enter " + lbl.getText());
 
                 inputValue = f.getType().getSimpleName();
@@ -92,6 +100,7 @@ public class Update_ui {
                     DatePicker datePicker = new DatePicker();
                     datePicker.getEditor().setDisable(true);
                     datePicker.getEditor().setOpacity(1);
+                    childrens.add(datePicker);
                     
                     GregorianCalendar cal = (GregorianCalendar)f.get(obj);
                     if (uiFunctions.populate_calendar_values(cal, datePicker) != true) {
@@ -101,7 +110,7 @@ public class Update_ui {
                         //datePicker.getParent().requestFocus();
                     }
 
-                    clearBtn.setOnAction(event -> uiFunctions.clearDatePickerValue(lbl, datePicker));
+                    clearBtn.setOnAction(event -> uiFunctions.clearDatePickerValue(datePicker));
                     
                     uiUtil.addToGridPane(gridPane, datePicker, column + 1, row);
                     uiUtil.addToGridPane(gridPane, clearBtn, column + 2, row);
@@ -135,7 +144,7 @@ public class Update_ui {
         try {
 
             GridPane gridPane = initializeGridPane();
-            VBox vboxUpdateUiLayout = uiUtil.createVbox();
+            UpdateUiVboxLayout = uiUtil.createVbox();
             AnchorPane anchorPane = new AnchorPane();
             HBox hboxFields = uiUtil.createHbox();
             hboxFields.setPadding(new Insets(0, 12, 15, 12));
@@ -147,21 +156,26 @@ public class Update_ui {
             hboxButtons.setSpacing(10);
             hboxButtons.setAlignment(Pos.CENTER);
 
-            Button updateButton = new Button("Update");
+            
             updateButton.setOnAction(ev -> {
                 uiFunctions.submitForm(anchorPane, obj, gridPane, statusLabel, "Fields Updated");
             });
 
-            Button cancelButton = new Button("Cancel");
+            
             cancelButton.setOnAction(ev -> {
                 statusLabel.setText("");
                 anchorPane.getChildren().clear();
             });
 
+            clearAllBtn.setOnAction(ev -> {
+                uiFunctions.clearAllFields(childrens);
+
+            });
+
             performOperation(obj, gridPane);
-            hboxButtons.getChildren().addAll(cancelButton, updateButton);
-            vboxUpdateUiLayout.getChildren().addAll(hboxFields, hboxButtons);
-            anchorPane.getChildren().add(vboxUpdateUiLayout);
+            hboxButtons.getChildren().addAll(cancelButton, updateButton, clearAllBtn);
+            UpdateUiVboxLayout.getChildren().addAll(hboxFields, hboxButtons);
+            anchorPane.getChildren().add(UpdateUiVboxLayout);
             
 
             return anchorPane;

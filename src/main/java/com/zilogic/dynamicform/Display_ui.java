@@ -27,6 +27,8 @@ public class Display_ui {
     public static FormUtil formUtil = new FormUtil();
     public static UiFunctions uiFunctions = new UiFunctions();
     public static UIUtil uiUtil = new UIUtil();
+    public static Button closeButton = new Button("Close");
+    public static VBox displayUiVboxLayout;
 
     public static GridPane initializeGridPane() {
         GridPane gridPane = uiUtil.createGridPane();
@@ -106,7 +108,7 @@ public class Display_ui {
         try {
 
             GridPane gridPane = initializeGridPane();
-            VBox vboxDisplayUiLayout = uiUtil.createVbox();
+            displayUiVboxLayout = uiUtil.createVbox();
             AnchorPane anchorPane = new AnchorPane();
 
             HBox hboxFields = uiUtil.createHbox();
@@ -119,7 +121,7 @@ public class Display_ui {
             hboxButtons.setSpacing(10);
             hboxButtons.setAlignment(Pos.CENTER);
 
-            Button closeButton = new Button("Close");
+            
             closeButton.setOnAction(ev -> {
                 statusLabel.setText("");
                 anchorPane.getChildren().clear();
@@ -127,8 +129,8 @@ public class Display_ui {
 
             performOperation(obj, gridPane);
             hboxButtons.getChildren().addAll(closeButton);
-            vboxDisplayUiLayout.getChildren().addAll(hboxFields, hboxButtons);
-            anchorPane.getChildren().add(vboxDisplayUiLayout);
+            displayUiVboxLayout.getChildren().addAll(hboxFields, hboxButtons);
+            anchorPane.getChildren().add(displayUiVboxLayout);
 
             return anchorPane;
         } catch (Exception e) {

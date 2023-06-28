@@ -8,23 +8,21 @@ package com.zilogic.dynamicform;
 import static com.zilogic.dynamicform.Main.mainVbox;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import javafx.animation.FadeTransition;
-
-import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
@@ -33,6 +31,8 @@ import javafx.util.Duration;
  */
 public class UiFunctions {
     public static boolean patternMatchFound = false;
+    public static ArrayList<Button> arrayButton = new ArrayList<>();
+
     public static Boolean populate_calendar_values(GregorianCalendar gc, DatePicker datePicker) {
         try {
             int year = gc.get(GregorianCalendar.YEAR);
@@ -97,7 +97,7 @@ public class UiFunctions {
 
         return txtField;
     }
-    
+
     public static TextField floatValidate(TextField txtField, Label lbl) {
         UnaryOperator<TextFormatter.Change> floatValidationFormatter = change -> {
 
@@ -161,7 +161,7 @@ public class UiFunctions {
 
         return txtField;
     }
-    
+
     public static TextField doubleValidate(TextField txtField, Label lbl) {
         UnaryOperator<TextFormatter.Change> doubleValidationFormatter = change -> {
 
@@ -259,14 +259,13 @@ public class UiFunctions {
         try {
             Label lblNode = new Label();
             ObservableList<Node> childrens = gridPane.getChildren();
-            
+            arrayButton.clear();
             Boolean validateFlag = true;
             int column = 1;
             Class obj = emp.getClass();
             Field[] fields = obj.getDeclaredFields();
             int i = 0;
-            printNodes(gridPane);
-            printFields(emp);
+
             for (Node node : childrens) {
                 
                 if (GridPane.getColumnIndex(node) == 0) {
@@ -284,6 +283,8 @@ public class UiFunctions {
                             if (txt.getText().equals("")) {
                                 validateFlag = false;
                                 lblNode.setStyle("-fx-text-fill: red");
+                                txt.setPromptText("Enter " + lblNode.getText());
+                                txt.getParent().requestFocus();
                             } else {
                                 if (validateFlag == true) {
                                     fields[i].set(emp, txt.getText());
@@ -295,6 +296,8 @@ public class UiFunctions {
                             if (txt.getText().equals("")) {
                                 validateFlag = false;
                                 lblNode.setStyle("-fx-text-fill: red");
+                                txt.setPromptText("Enter " + lblNode.getText());
+                                txt.getParent().requestFocus();
                             } else {
                                 int val = Integer.parseInt(txt.getText());  
                                 if (validateFlag == true) {
@@ -307,13 +310,16 @@ public class UiFunctions {
                             if (txt.getText().equals("")) {
                                 validateFlag = false;
                                 lblNode.setStyle("-fx-text-fill: red");
+                                txt.setPromptText("Enter " + lblNode.getText());
+                                txt.getParent().requestFocus();
+
                             } else {
                                 float val = Float.parseFloat(txt.getText());
                                 String valConversion = Float.toString(val);
                                 if (validateFlag == true) {
                                     fields[i].setFloat(emp, val);
                                     txt.setText(valConversion);
-                                    //txt.getParent().requestFocus();
+                                    
                                 }
                             }
                             i = i + 1;
@@ -321,6 +327,8 @@ public class UiFunctions {
                             if (txt.getText().equals("")) {
                                 validateFlag = false;
                                 lblNode.setStyle("-fx-text-fill: red");
+                                txt.setPromptText("Enter " + lblNode.getText());
+                                txt.getParent().requestFocus();
                             } else {
                                 double doubleVal = Double.parseDouble(txt.getText());
                                 String doubleValConversion = Double.toString(doubleVal);
@@ -332,13 +340,14 @@ public class UiFunctions {
                             i = i + 1;
                         }
                     } else if (node.getClass().getSimpleName().equalsIgnoreCase("DatePicker")) {
-                        
 
                         DatePicker datePicker = (DatePicker) node;
                         GregorianCalendar gc = new GregorianCalendar();
                         if (datePicker.getValue() == null) {
                             validateFlag = false;
                             lblNode.setStyle("-fx-text-fill: red");
+                            datePicker.setPromptText("Enter " + lblNode.getText());
+                            datePicker.getParent().requestFocus();
 
                             i = i + 1;
                         } else {
@@ -350,7 +359,13 @@ public class UiFunctions {
                             i = i + 1;
                         }
                     }
-                }
+                } else if (node.getClass().getSimpleName().equalsIgnoreCase("button")) {
+                        Button btn = new Button();
+                        btn = (Button) node;
+
+                        arrayButton.add(btn);
+                    }
+                
             }
             return validateFlag;
         } catch (Exception e) {
@@ -362,35 +377,81 @@ public class UiFunctions {
         txtField.setText("");
     }
 
-    public static void clearDatePickerValue(Label dateLbl, DatePicker datePicker) {
+    public static void clearDatePickerValue(DatePicker datePicker) {
 
         datePicker.setValue(null);
     }
+    
+    public static void clearAllFields(ObservableList<Node> nodes) {
         
-    public static void ChangeBackGroundColor(Boolean validateFlag) {
-        String color;
-        
-        if (validateFlag) {
-            color =  "-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #6ae2aa, #c9c9c9);";
-        } else {
-            color = "-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #ff5d48, #c9c9c9);";
+        for (Node node: nodes) {
+
+            if (node.getClass().getSimpleName().equalsIgnoreCase("textfield")) {
+                clearDataValue((TextField)node);
+            } else if (node.getClass().getSimpleName().equalsIgnoreCase("datepicker")) {
+                clearDatePickerValue((DatePicker)node);
+            }
         }
-        mainVbox.setStyle(color);
+    }
+
+    public static void toggleButtonsState(ArrayList<Button> buttons) {
+
+        for (Button btn: buttons) {
+
+            if (btn.isDisable()) {
+                btn.setDisable(false);
+            } else {
+                btn.setDisable(true);
+            }
+        }
+    }
+    
+    public static void setTransitionEffect(Node node, int fadeDuration, Boolean conditionFlag) {
+        
+        
         FadeTransition ft = new FadeTransition(Duration.millis(400), mainVbox);
         ft.setFromValue(1.0);
         ft.setToValue(0.6);
         ft.setCycleCount(4);
+
         ft.setAutoReverse(true);
         ft.play();
 
-        ft.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                mainVbox.setStyle("-fx-background-color: white;");
-            }
+        toggleButtonsState(arrayButton);
+
+
+        ft.setOnFinished((ActionEvent t) -> {
+            mainVbox.setStyle("-fx-background-color: white;");
+            toggleButtonsState(arrayButton);
+
         });
     }
-    
+  
+    public static void ChangeBackGroundColor(Boolean validateFlag) {
+        String color;
+        
+        if (validateFlag) {
+            color = "-fx-background-color: linear-gradient(from 100% 100% to 25% 25%, #6ae2aa, #ffffff);";
+        } else {
+            color = "-fx-background-color: linear-gradient(from 200% 200% to 10% 10%, #ff5d48, #ffffff);";
+        }
+
+        mainVbox.setStyle(color);
+
+        arrayButton.add(Main.newBtn);
+        arrayButton.add(Main.updateBtn);
+        arrayButton.add(Main.displayBtn);
+        arrayButton.add(Create_ui.createButton);
+        arrayButton.add(Create_ui.cancelButton);
+        arrayButton.add(Create_ui.clearAllBtn);
+        arrayButton.add(Update_ui.updateButton);
+        arrayButton.add(Update_ui.cancelButton);
+        arrayButton.add(Update_ui.clearAllBtn);
+        arrayButton.add(Display_ui.closeButton);
+
+        setTransitionEffect(mainVbox, 400, validateFlag);
+    }
+
     public static void printFields(Object emp) {
         Class obj = emp.getClass();
         Field[] fields = obj.getDeclaredFields();
@@ -399,7 +460,7 @@ public class UiFunctions {
             System.out.println("fields" + field.getType().getSimpleName());
         }       
     }
-    
+
     public static void printNodes(GridPane gridPane) {
         ObservableList<Node> childrens = gridPane.getChildren();
         
