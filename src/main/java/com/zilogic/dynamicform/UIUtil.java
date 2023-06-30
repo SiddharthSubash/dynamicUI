@@ -5,6 +5,7 @@
  */
 package com.zilogic.dynamicform;
 
+import java.util.regex.Pattern;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -83,5 +84,12 @@ public class UIUtil {
     
     public static void closeWindow(Stage stage) {
         stage.close();
+    }
+
+    public static Boolean validateEmailText(String text) {
+        String regex = "^[A-Za-z0-9.]+@[A-Za-z0-9.]+\\.[A-Za-z0-9]{2,6}$";
+        Pattern pattern = Pattern.compile(regex);
+
+        return pattern.matcher(text).matches();
     }
 }

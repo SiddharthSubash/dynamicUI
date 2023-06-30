@@ -25,6 +25,9 @@ public class Employee implements java.io.Serializable {
     int id;
     @JsonSerializable.JsonElement(name = "Salary", type = Double.class)
     double salary;
+    
+    @JsonSerializable.JsonElement(name = "Email", type = String.class)
+    String email;
 
 //
 //    public Employee(String name, int age, GregorianCalendar dob, int id) {

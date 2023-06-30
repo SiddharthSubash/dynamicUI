@@ -56,6 +56,7 @@ public class Update_ui {
             String data_name;
             Object val;
             String inputValue = "";
+            int checkType = 0;
 
             for (Field f: fields) {
 
@@ -80,18 +81,31 @@ public class Update_ui {
                 txt = uiUtil.createTextField(val);
                 childrens.add(txt);
                 txt.setPromptText("Enter " + lbl.getText());
+                
+                if (uiFunctions.checkEntryForEmail(data_name)) {
+                    checkType = 5;
+                } else {
+                    checkType = uiFunctions.checkFieldDataType(inputValue);
+                }
 
-                inputValue = f.getType().getSimpleName();
-                int checkType = uiFunctions.checkFieldDataType(inputValue);
-
-                if (checkType == 1) {
-                    uiFunctions.numberValidate(txt, lbl);
-                } else if (checkType == 2) {
-                    uiFunctions.stringValidate(txt, lbl);
-                } else if (checkType == 3) {
-                    uiFunctions.floatValidate(txt, lbl);
-                } else if (checkType == 4) {
-                    uiFunctions.doubleValidate(txt, lbl);
+                switch (checkType) {
+                    case 1:
+                        uiFunctions.numberValidate(txt, lbl);
+                        break;
+                    case 2:
+                        uiFunctions.stringValidate(txt, lbl);
+                        break;
+                    case 3:
+                        uiFunctions.floatValidate(txt, lbl);
+                        break;
+                    case 4:
+                        uiFunctions.doubleValidate(txt, lbl);
+                        break;
+                    case 5:
+                        uiFunctions.emailValidate(txt, lbl);
+                        break;
+                    default:
+                        break;
                 }
 
                 uiUtil.addToGridPane(gridPane, lbl, column, row);
@@ -111,7 +125,7 @@ public class Update_ui {
                     }
 
                     clearBtn.setOnAction(event -> uiFunctions.clearDatePickerValue(datePicker));
-                    
+
                     uiUtil.addToGridPane(gridPane, datePicker, column + 1, row);
                     uiUtil.addToGridPane(gridPane, clearBtn, column + 2, row);
                     datePicker.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
@@ -127,11 +141,11 @@ public class Update_ui {
                 } else {
 
                     clearBtn.setOnAction(event -> uiFunctions.clearDataValue(txt));
-                    
+
                     uiUtil.addToGridPane(gridPane, txt, column + 1, row);
                     uiUtil.addToGridPane(gridPane, clearBtn, column + 2, row);
                 }
-                
+
                 row = row + 1;
             }
 
@@ -156,12 +170,10 @@ public class Update_ui {
             hboxButtons.setSpacing(10);
             hboxButtons.setAlignment(Pos.CENTER);
 
-            
             updateButton.setOnAction(ev -> {
                 uiFunctions.submitForm(anchorPane, obj, gridPane, statusLabel, "Fields Updated");
             });
 
-            
             cancelButton.setOnAction(ev -> {
                 statusLabel.setText("");
                 anchorPane.getChildren().clear();
@@ -176,7 +188,6 @@ public class Update_ui {
             hboxButtons.getChildren().addAll(cancelButton, updateButton, clearAllBtn);
             UpdateUiVboxLayout.getChildren().addAll(hboxFields, hboxButtons);
             anchorPane.getChildren().add(UpdateUiVboxLayout);
-            
 
             return anchorPane;
 

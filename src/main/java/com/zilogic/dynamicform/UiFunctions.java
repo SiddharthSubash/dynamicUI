@@ -32,6 +32,7 @@ import javafx.util.Duration;
 public class UiFunctions {
     public static boolean patternMatchFound = false;
     public static ArrayList<Button> arrayButton = new ArrayList<>();
+    public static ArrayList<Node> arrayNodes = new ArrayList<>();
 
     public static Boolean populate_calendar_values(GregorianCalendar gc, DatePicker datePicker) {
         try {
@@ -45,17 +46,19 @@ public class UiFunctions {
             return false;
         }
     }
+    
+    public static void clearAnchorPane(AnchorPane anchorPane) {
+        anchorPane.getChildren().clear();
+    }
 
     public static Boolean submitForm(AnchorPane anchorPane, Object obj, GridPane gridPane, Label lbl, String statusText) {
         Boolean validateFlag = UiFunctions.validate_ui(gridPane, obj);
-        
+        ChangeBackGroundColor(anchorPane, validateFlag);
         if (validateFlag == true) {
             lbl.setText(statusText);
             lbl.setStyle("-fx-text-fill: green");
-
-            anchorPane.getChildren().clear();
+            disableUI(gridPane);
         }
-        ChangeBackGroundColor(validateFlag);
         return validateFlag;
     }
 
@@ -254,6 +257,35 @@ public class UiFunctions {
 
         return txtField;
     }
+    
+    public static TextField emailValidate(TextField txtField, Label lbl) {
+        UnaryOperator<TextFormatter.Change> StringValidationFormatter = change -> {
+            if (!change.getText().matches("[$&+,:;=\\\\?#|/'\\[\\]<>^*()%!-]")){
+                if (change.isContentChange() == true) {
+//                    if (lbl.getStyle().equalsIgnoreCase("-fx-text-fill: red")) {
+//                        lbl.setStyle("-fx-text-fill: green");
+//                    } else
+                      if (change.getControlNewText().length() == 0) {
+                        if (lbl.getStyle().length() != 0) {
+                            lbl.setStyle("-fx-text-fill: red");
+                            txtField.setPromptText("Enter " + lbl.getText());
+                            txtField.getParent().requestFocus();
+                        }
+                    }
+                }
+
+                return change;
+            } else {
+
+                return null;
+            }
+        };
+
+        TextFormatter<String> formatter = new TextFormatter<>(StringValidationFormatter);
+        txtField.setTextFormatter(formatter);
+
+        return txtField;
+    }
 
     public static Boolean validate_ui(GridPane gridPane, Object emp) {
         try {
@@ -267,25 +299,39 @@ public class UiFunctions {
             int i = 0;
 
             for (Node node : childrens) {
-                
+
                 if (GridPane.getColumnIndex(node) == 0) {
                     if (node.getClass().getSimpleName().equalsIgnoreCase("Label")) {
                         
                         lblNode = (Label)node;
                     }
                 } else if (GridPane.getColumnIndex(node) == column) {
+                    
                     if (node.getClass().getSimpleName().equalsIgnoreCase("TextField")) {
                         TextField txt = (TextField) node;
                         TextField txtObj = txt;
                         txtObj.setText(txt.getText());
-                        
+
                         if (fields[i].getType().getSimpleName().equalsIgnoreCase("String")) {
-                            if (txt.getText().equals("")) {
+                            String lbl_name = lblNode.getText().toLowerCase();
+                            if (lbl_name.contains("email")) {
+                                Boolean checkEmail = UIUtil.validateEmailText(txt.getText());
+                                if (checkEmail == false) {
+                                    lblNode.setStyle("-fx-text-fill: red");
+                                    txt.setPromptText("Enter " + lblNode.getText());
+                                    txt.getParent().requestFocus();
+                                } else if (checkEmail == true) {
+                                    lblNode.setStyle("-fx-text-fill: green");
+                                    fields[i].set(emp, txt.getText());
+                                    
+                                }
+                            } else if (txt.getText().equals("")) {
                                 validateFlag = false;
                                 lblNode.setStyle("-fx-text-fill: red");
                                 txt.setPromptText("Enter " + lblNode.getText());
                                 txt.getParent().requestFocus();
                             } else {
+
                                 if (validateFlag == true) {
                                     fields[i].set(emp, txt.getText());
                                 }
@@ -319,11 +365,10 @@ public class UiFunctions {
                                 if (validateFlag == true) {
                                     fields[i].setFloat(emp, val);
                                     txt.setText(valConversion);
-                                    
                                 }
                             }
                             i = i + 1;
-                        }  else if (fields[i].getType().getSimpleName().equalsIgnoreCase("Double")) {
+                        } else if (fields[i].getType().getSimpleName().equalsIgnoreCase("Double")) {
                             if (txt.getText().equals("")) {
                                 validateFlag = false;
                                 lblNode.setStyle("-fx-text-fill: red");
@@ -406,28 +451,28 @@ public class UiFunctions {
         }
     }
     
-    public static void setTransitionEffect(Node node, int fadeDuration, Boolean conditionFlag) {
-        
-        
-        FadeTransition ft = new FadeTransition(Duration.millis(400), mainVbox);
-        ft.setFromValue(1.0);
-        ft.setToValue(0.6);
-        ft.setCycleCount(4);
+    public static void setTransitionEffect(AnchorPane anchorPane, Node node, int fadeDuration, double fromValue, double toValue, int cycleCount, Boolean autoReverse, Boolean validateFlage) {
+        FadeTransition ft = new FadeTransition(Duration.millis(fadeDuration), node);
 
-        ft.setAutoReverse(true);
+        ft.setFromValue(fromValue);
+        ft.setToValue(toValue);
+        ft.setCycleCount(cycleCount);
+
+        ft.setAutoReverse(autoReverse);
         ft.play();
 
         toggleButtonsState(arrayButton);
 
-
         ft.setOnFinished((ActionEvent t) -> {
             mainVbox.setStyle("-fx-background-color: white;");
             toggleButtonsState(arrayButton);
-
+            if (validateFlage) {
+                clearAnchorPane(anchorPane);
+            }
         });
     }
-  
-    public static void ChangeBackGroundColor(Boolean validateFlag) {
+
+    public static void ChangeBackGroundColor(AnchorPane anchorPane, Boolean validateFlag) {
         String color;
         
         if (validateFlag) {
@@ -449,7 +494,7 @@ public class UiFunctions {
         arrayButton.add(Update_ui.clearAllBtn);
         arrayButton.add(Display_ui.closeButton);
 
-        setTransitionEffect(mainVbox, 400, validateFlag);
+        setTransitionEffect(anchorPane, mainVbox, 200, 1.0, 0.6, 4, true, validateFlag);
     }
 
     public static void printFields(Object emp) {
@@ -464,8 +509,21 @@ public class UiFunctions {
     public static void printNodes(GridPane gridPane) {
         ObservableList<Node> childrens = gridPane.getChildren();
         
-        for (Node node: childrens) {
+        childrens.forEach(node -> {
             System.out.println("nodes" + node.getClass().getSimpleName());
-        }
+        });
+    }
+
+    public static void disableUI(GridPane gridPane) {
+
+        ObservableList<Node> childrens = gridPane.getChildren();
+        childrens.forEach(node -> {
+            node.setDisable(true);
+        });
+    }
+    
+    public static Boolean checkEntryForEmail(String data_name) {
+        data_name = data_name.toLowerCase();
+        return data_name.contains("email");
     }
 }

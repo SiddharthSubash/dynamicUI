@@ -54,6 +54,7 @@ public class Create_ui {
         Object val = "";
         String data_name;
         String inputValue = "";
+        int checkType = 0;
         
 
         for (Field f: fields) {
@@ -65,15 +66,20 @@ public class Create_ui {
             } else {
                 data_name = f.getName();
             }
-            
+
             Label lbl = uiUtil.createLabel(data_name);
-            
+
             txt = uiUtil.createTextField(val);
             childrens.add(txt);
             Button clearBtn = uiUtil.createButton("Clear");
-
+            
             inputValue = f.getType().getSimpleName();
-            int checkType = uiFunctions.checkFieldDataType(inputValue);
+
+            if (uiFunctions.checkEntryForEmail(data_name)) {
+                checkType = 5;
+            } else {
+                checkType = uiFunctions.checkFieldDataType(inputValue);
+            }
 
             switch (checkType) {
                 case 1:
@@ -87,6 +93,9 @@ public class Create_ui {
                     break;
                 case 4:
                     uiFunctions.doubleValidate(txt, lbl);
+                    break;
+                case 5:
+                    uiFunctions.emailValidate(txt, lbl);
                     break;
                 default:
                     break;
@@ -157,8 +166,6 @@ public class Create_ui {
             });
 
             performOperation(obj, gridPane);
-
-
 
             hboxButtons.getChildren().addAll(cancelButton, createButton, clearAllBtn);
             createUiVboxLayout.getChildren().addAll(hboxFields, hboxButtons);
